@@ -37,9 +37,10 @@ public class MainWindow
 				String path = txt_filename.getText();
 
 				String filename = new File(path).getName();
+				String fileDir = new File(path).getParentFile().getPath();
 				filename = filename.replace(".pdf", "");
 
-				String outputDir = "something";
+				String outputDir = fileDir + "/tmp";
 				setupDirectory(outputDir);
 				ConvertPDF(filename, path, outputDir);
 
@@ -54,7 +55,7 @@ public class MainWindow
 		{
 			File[] allFiles = new File(outputDir).listFiles();
 
-			OutputStream out = new FileOutputStream("./" + filename + ".cbz");
+			OutputStream out = new FileOutputStream(new File(outputDir).getParentFile().getPath() + "/" + filename + ".cbz");
 			ZipOutputStream zOut = new ZipOutputStream(new BufferedOutputStream(out));
 			for(int i = 0; i < allFiles.length; i++)
 			{
