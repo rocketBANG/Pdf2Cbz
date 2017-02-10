@@ -25,6 +25,8 @@ public class MainWindow
 	private JPanel MainWindow;
 	private JTextField txt_filename;
 	private JButton btn_load;
+	private JCheckBox recursiveCheckBox;
+	private JButton convertButton;
 
 	public MainWindow()
 	{
