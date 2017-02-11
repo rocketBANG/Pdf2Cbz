@@ -69,7 +69,7 @@ public class ImageRenderListener implements RenderListener
 			}
 			filename = String.format(path, pageNumber, image.getFileType());
 			pageNumber++;
-			System.out.println("Writing image to file: " + filename);
+//			System.out.println("Writing image to file: " + filename);
 			os = new FileOutputStream(filename);
 			os.write(image.getImageAsBytes());
 			os.flush();

@@ -1,8 +1,8 @@
 package com.rocketbang;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
 
@@ -11,13 +11,13 @@ import java.awt.event.MouseEvent;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
  * Created by Reuben on 6/02/2017.
+ * Main window for converter application
+ * Handles the code for the interface and uses a ConvertPDF object to handle the conversion
  */
 
 public class MainWindow
@@ -25,8 +25,11 @@ public class MainWindow
 	private JPanel MainWindow;
 	private JTextField txt_filename;
 	private JButton btn_load;
-	private JCheckBox recursiveCheckBox;
-	private JButton convertButton;
+	private JButton btn_convert;
+	private JTextArea txta_log;
+	private JButton btn_clearlog;
+	private JCheckBox chk_delete;
+	PrintStream stream;
 
 	public MainWindow()
 	{
@@ -35,18 +38,48 @@ public class MainWindow
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
+				FileNameExtensionFilter pdfFilter = new FileNameExtensionFilter("PDF files only", "pdf");
+
+				JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home"));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				fileChooser.setFileFilter(pdfFilter);
+
+				int result = fileChooser.showOpenDialog(MainWindow);
+				if (result == JFileChooser.APPROVE_OPTION)
+				{
+					File selectedFile = fileChooser.getSelectedFile();
+					txt_filename.setText(selectedFile.getPath());
+				}
+			}
+		});
+		btn_clearlog.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				txta_log.setText("");
+			}
+		});
+		btn_convert.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				System.out.println("Checked? " + chk_delete.isSelected());
+				ConvertPDF pdfConverter = new ConvertPDF(new File(txt_filename.getText()), txta_log, chk_delete.isSelected());
+
+				(new Thread(pdfConverter)).start();
 //                super.mouseClicked(e);
-				String path = txt_filename.getText();
-
-				String filename = new File(path).getName();
-				String fileDir = new File(path).getParentFile().getPath();
-				filename = filename.replace(".pdf", "");
-
-				String outputDir = fileDir + "/tmp";
-				setupDirectory(outputDir);
-				ConvertPDF(filename, path, outputDir);
-
-				ZipFiles(filename, outputDir);
+//
+//				String filename = new File(path).getName();
+//				String fileDir = new File(path).getParentFile().getPath();
+//				filename = filename.replace(".pdf", "");
+//
+//				String outputDir = fileDir + "/tmp";
+//				setupDirectory(outputDir);
+//				ConvertPDF(filename, path, outputDir);
+//
+//				ZipFiles(filename, outputDir);
 			}
 		});
 	}
@@ -113,7 +146,7 @@ public class MainWindow
 
 	private void ConvertPDF(String filename, String path, String outputDir)
 	{
-		PdfReader reader = null;
+		PdfReader reader;
 		try
 		{
 			reader = new PdfReader(path);
@@ -122,6 +155,7 @@ public class MainWindow
 		{
 			System.err.print("Could not open the file");
 			e.printStackTrace();
+			return;
 		}
 
 		PdfReaderContentParser parser = new PdfReaderContentParser(reader);
@@ -159,10 +193,10 @@ public class MainWindow
 		{
 		}
 
-		JFrame frame = new JFrame("MainWindow");
+		JFrame frame = new JFrame("PDF to CBZ Converter");
 
 		frame.setContentPane(new MainWindow().MainWindow);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
 

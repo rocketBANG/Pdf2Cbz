@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Pdf2Cbr.iml" filepath="$PROJECT_DIR$/Pdf2Cbr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pdf2Cbz.iml" filepath="$PROJECT_DIR$/Pdf2Cbz.iml" />
     </modules>
   </component>
 </project>
