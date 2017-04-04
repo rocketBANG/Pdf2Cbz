@@ -200,6 +200,9 @@ public class MainWindow
 		frame.pack();
 		frame.setVisible(true);
 
+		ImageIcon img = new ImageIcon(ClassLoader.getSystemResource("res/images/icon.png"));
+		frame.setIconImage(img.getImage());
+
 
 	}
 

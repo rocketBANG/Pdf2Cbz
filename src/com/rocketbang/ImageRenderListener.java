@@ -20,7 +20,6 @@ import java.util.logging.Logger;
  */
 public class ImageRenderListener implements RenderListener
 {
-
 	/**
 	 * The directory path to store images.
 	 */
@@ -71,6 +70,7 @@ public class ImageRenderListener implements RenderListener
 			pageNumber++;
 //			System.out.println("Writing image to file: " + filename);
 			os = new FileOutputStream(filename);
+
 			os.write(image.getImageAsBytes());
 			os.flush();
 			os.close();

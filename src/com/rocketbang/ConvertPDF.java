@@ -200,7 +200,7 @@ public class ConvertPDF implements Runnable
 					return;
 				}
 			}
-			logEvent("Finished converting");
+			logEvent("Finished converting directory");
 		}
 	}
 
